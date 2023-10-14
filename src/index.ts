@@ -45,13 +45,13 @@ if (options.id) {
     projects.push({ title: project.getTitle()!, value: project.getProjectNumber()! })
   }
   console.log(projects)
-  await prompts({
+  id = (await prompts({
     type: 'select',
     name: 'value',
     message: 'Pick a project',
     choices: projects,
     initial: 1
-  })
+  })).value
 }
 const PROJECT_ITEMS = await api.fetchProjectItems(NAME, ORG, id, TOKEN)
 console.log(PROJECT_ITEMS)
