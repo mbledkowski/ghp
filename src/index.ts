@@ -44,7 +44,6 @@ if (options.id) {
   for (const project of projectsRaw) {
     projects.push({ title: project.getTitle()!, value: project.getProjectNumber()! })
   }
-  console.log(projects)
   id = (await prompts({
     type: 'select',
     name: 'value',
@@ -54,4 +53,7 @@ if (options.id) {
   })).value
 }
 const PROJECT_ITEMS = await api.fetchProjectItems(NAME, ORG, id, TOKEN)
-console.log(PROJECT_ITEMS)
+for (const item of PROJECT_ITEMS) {
+  console.log(item)
+  console.table({ title: item.getTitle(), body: item.getBody(), author: item.getAuthor()?.login, assignees: item.getAssignees(), state: item.getState(), archived: item.isArchived(), id: item.getNumber(), createdAt: item.getCreatedAt(), updatedAt: item.getUpdatedAt(), closedAt: item.getClosedAt(), labels: item.getLabels(), milestone: item.getMilestone(), status: item.getStatus(), url: item.getUrl() })
+}
