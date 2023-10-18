@@ -2,6 +2,8 @@ import * as api from './api/projectsV2';
 import { program } from 'commander';
 import { getLastCommit } from 'git-last-commit';
 import prompts from 'prompts';
+import { data2map } from './components/data2map';
+import { Card } from './interface/card';
 
 async function getVersion() {
   let version = "0.0.0";
@@ -52,8 +54,12 @@ if (options.id) {
     initial: 1
   })).value
 }
-const PROJECT_ITEMS = await api.fetchProjectItems(NAME, ORG, id, TOKEN)
-for (const item of PROJECT_ITEMS) {
-  console.log(item)
-  console.table({ title: item.getTitle(), body: item.getBody(), author: item.getAuthor()?.login, assignees: item.getAssignees(), state: item.getState(), archived: item.isArchived(), id: item.getNumber(), createdAt: item.getCreatedAt(), updatedAt: item.getUpdatedAt(), closedAt: item.getClosedAt(), labels: item.getLabels(), milestone: item.getMilestone(), status: item.getStatus(), url: item.getUrl() })
+
+{
+  const projectItems = await api.fetchProjectItems(NAME, ORG, id, TOKEN)
+  const standardizedProjectItems: Card[] = []
+  for (const item of projectItems) {
+    standardizedProjectItems.push({ title: item.getTitle()!, body: item.getBody()!, author: item.getAuthor()?.login as string, assignees: item.getAssignees()!, state: item.getState()!, archived: item.isArchived()!, id: parseInt(item.getNumber()!), createdAt: item.getCreatedAt()!, updatedAt: item.getUpdatedAt()!, closedAt: item.getClosedAt()!, labels: item.getLabels()!, milestone: item.getMilestone()!, status: item.getStatus()!, url: item.getUrl()! })
+  }
+  const data = data2map(standardizedProjectItems);
 }
