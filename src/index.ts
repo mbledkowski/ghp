@@ -4,6 +4,9 @@ import { getLastCommit } from 'git-last-commit';
 import prompts from 'prompts';
 import { data2map } from './components/data2map';
 import { Card } from './interface/card';
+import { exists, readdir, ensureDir } from 'fs-extra';
+import { resolve } from 'path';
+import { map2files } from './components/map2files';
 
 async function getVersion() {
   let version = "0.0.0";
@@ -54,12 +57,29 @@ if (options.id) {
     initial: 1
   })).value
 }
-
 {
   const projectItems = await api.fetchProjectItems(NAME, ORG, id, TOKEN)
   const standardizedProjectItems: Card[] = []
   for (const item of projectItems) {
     standardizedProjectItems.push({ title: item.getTitle()!, body: item.getBody()!, author: item.getAuthor()?.login as string, assignees: item.getAssignees()!, state: item.getState()!, archived: item.isArchived()!, id: parseInt(item.getNumber()!), createdAt: item.getCreatedAt()!, updatedAt: item.getUpdatedAt()!, closedAt: item.getClosedAt()!, labels: item.getLabels()!, milestone: item.getMilestone()!, status: item.getStatus()!, url: item.getUrl()! })
   }
-  const data = data2map(standardizedProjectItems);
+  {
+    let dir = "";
+    const data = data2map(standardizedProjectItems);
+
+    if (await exists(options.path)) {
+      const files = await readdir(options.path);
+      if (files.length > 0) {
+        dir = resolve(options.path, "./kanban");
+        ensureDir(dir);
+      } else {
+        dir = options.path;
+      }
+    } else {
+      dir = options.path;
+      ensureDir(dir);
+    }
+
+    map2files(data, dir);
+  }
 }
