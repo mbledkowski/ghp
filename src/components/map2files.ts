@@ -7,10 +7,10 @@ import sanitize from "sanitize-filename";
 export async function map2files(data: Map<string, Card[]>, path: string): Promise<void> {
   const mainFileName = "Kanban";
   const main = createWriteStream(resolve(path, `./${mainFileName}.md`));
-  const mainStart = readFile(resolve(__dirname, "./mainStart.md"));
-  const mainEnd = readFile(resolve(__dirname, "./mainEnd.md"));
+  const mainStart = readFile(resolve(__dirname, "./map2files/mainStart.md"));
+  const mainEnd = readFile(resolve(__dirname, "./map2files/mainEnd.md"));
   const cardsDirName = "Cards";
-  ensureDir(resolve(path, `./${cardsDirName}`));
+  await ensureDir(resolve(path, `./${cardsDirName}`));
   const internalData: InternalData = { mainFileName, cardsDirName, lists: [] }
   main.on('error', (error) => {
     console.log(`An error occured while writing to the file. Error: ${error.message}`);
@@ -97,7 +97,7 @@ export async function map2files(data: Map<string, Card[]>, path: string): Promis
   main.write(await mainEnd);
   main.close();
 
-  ensureDir(resolve(path, "./.ghp"));
+  await ensureDir(resolve(path, "./.ghp"));
   {
     const mainInternal = createWriteStream(resolve(path, "./.ghp/data.json"))
     mainInternal.write(JSON.stringify(internalData));
