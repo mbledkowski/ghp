@@ -19,7 +19,7 @@ export async function map2files(data: Map<string, Card[]>, path: string): Promis
   {
     const mapIterator = data.keys();
     for (const key of mapIterator) {
-      main.write(`## ${key}\n`);
+      main.write(`## ${key.trim()}\n`);
       internalData.lists.push({ name: key, cards: [] });
       {
         const cards = data.get(key)!;
@@ -63,7 +63,7 @@ export async function map2files(data: Map<string, Card[]>, path: string): Promis
           {
             const editableTableMd = markdownTable(editableTable, { align: ["l", "l"] });
             const staticTableMd = markdownTable(staticTable, { align: ["l", "l"] });
-            const sanitizedTitle = sanitize(card.title).split(" ").join("_");
+            const sanitizedTitle = sanitize(card.title).trim().split(" ").join("_");
             let cardPath = resolve(path, `./${cardsDirName}/${sanitizedTitle}.md`);
             let numberOfTries = 0;
             while (await exists(cardPath)) {
@@ -80,7 +80,7 @@ export async function map2files(data: Map<string, Card[]>, path: string): Promis
               } else {
                 cardFileName = `${sanitizedTitle}_${numberOfTries}`;
               }
-              main.write(`- [ ] **${card.title}** @{${card.createdAt}} ![Card](./${cardsDirName}/${cardFileName}.md)\n`)
+              main.write(`- [ ] **${card.title.trim()}** @{${card.createdAt}} ![Card](./${cardsDirName}/${cardFileName}.md)\n`)
               internalData.lists[internalData.lists.length - 1].cards.push({
                 path: cardFileName,
                 card
