@@ -1,4 +1,4 @@
-import * as api from './api/projectsV2';
+import * as fetchApi from './api/fetch';
 import { program } from 'commander';
 import { getLastCommit } from 'git-last-commit';
 import prompts from 'prompts';
@@ -6,7 +6,7 @@ import { Card } from './interface/card';
 import { exists, readdir, ensureDir } from 'fs-extra';
 import { resolve } from 'path';
 import { internalDataToFiles } from './components/internalDataToFiles';
-import { getInternalData } from './components/getInternalData.ts';
+import { getInternalData } from './components/getInternalData';
 
 async function getVersion() {
   let version = "0.0.0";
@@ -44,7 +44,7 @@ let id = 1;
 if (options.id) {
   id = options.id;
 } else {
-  const projectsRaw = (await api.fetchProjects(NAME, ORG, TOKEN)).getProjects();
+  const projectsRaw = (await fetchApi.fetchProjects(NAME, ORG, TOKEN)).getProjects();
   const projects = []
   for (const project of projectsRaw) {
     projects.push({ title: project.getTitle()!, value: project.getProjectNumber()! })
@@ -58,7 +58,7 @@ if (options.id) {
   })).value
 }
 {
-  const projectItems = await api.fetchProjectItems(NAME, ORG, id, TOKEN)
+  const projectItems = await fetchApi.fetchProjectItems(NAME, ORG, id, TOKEN)
   const rawCardArray: Card[] = []
   for (const item of projectItems) {
     rawCardArray.push({ title: item.getTitle()!, body: item.getBody()!, author: item.getAuthor()?.login as string, assignees: item.getAssignees()!, state: item.getState()!, archived: item.isArchived()!, id: parseInt(item.getNumber()!), createdAt: item.getCreatedAt()!, updatedAt: item.getUpdatedAt()!, closedAt: item.getClosedAt()!, labels: item.getLabels()!, milestone: item.getMilestone()!, status: item.getStatus()!, url: item.getUrl()! })
