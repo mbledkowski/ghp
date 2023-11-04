@@ -79,6 +79,6 @@ if (options.id) {
       ensureDir(path);
     }
 
-    internalDataToFiles(getInternalData(rawCardArray), path);
+    internalDataToFiles(getInternalData(rawCardArray, { name: NAME, org: ORG, id, token: TOKEN }), path);
   }
 }

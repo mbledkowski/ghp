@@ -1,4 +1,5 @@
 import { Card } from './card';
 import { InternalData } from './internalData';
+import { Auth } from './auth';
 
-export { Card, InternalData };
+export { Card, InternalData, Auth };

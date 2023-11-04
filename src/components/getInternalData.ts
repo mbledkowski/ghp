@@ -1,5 +1,5 @@
 import sanitize from "sanitize-filename";
-import { Card, InternalData } from "../interface";
+import { Auth, Card, InternalData } from "../interface";
 
 export function dataToMap(data: Card[]): Map<string, Card[]> {
   const mapOfData: Map<string, Card[]> = new Map();
@@ -13,10 +13,10 @@ export function dataToMap(data: Card[]): Map<string, Card[]> {
   return mapOfData;
 }
 
-export function getInternalData(data: Card[]): InternalData {
+export function getInternalData(data: Card[], auth: Auth): InternalData {
   const mainFileName = "Kanban";
   const cardsDirName = "Cards";
-  const internalData: InternalData = { mainFileName, cardsDirName, lists: [] }
+  const internalData: InternalData = { auth, mainFileName, cardsDirName, lists: [] }
 
   const dataMap = dataToMap(data);
 
