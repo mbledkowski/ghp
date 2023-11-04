@@ -2,11 +2,11 @@ import * as api from './api/projectsV2';
 import { program } from 'commander';
 import { getLastCommit } from 'git-last-commit';
 import prompts from 'prompts';
-import { data2map } from './components/data2map';
 import { Card } from './interface/card';
 import { exists, readdir, ensureDir } from 'fs-extra';
 import { resolve } from 'path';
-import { map2files } from './components/map2files';
+import { internalDataToFiles } from './components/internalDataToFiles';
+import { getInternalData } from './components/getInternalData.ts';
 
 async function getVersion() {
   let version = "0.0.0";
@@ -59,27 +59,26 @@ if (options.id) {
 }
 {
   const projectItems = await api.fetchProjectItems(NAME, ORG, id, TOKEN)
-  const standardizedProjectItems: Card[] = []
+  const rawCardArray: Card[] = []
   for (const item of projectItems) {
-    standardizedProjectItems.push({ title: item.getTitle()!, body: item.getBody()!, author: item.getAuthor()?.login as string, assignees: item.getAssignees()!, state: item.getState()!, archived: item.isArchived()!, id: parseInt(item.getNumber()!), createdAt: item.getCreatedAt()!, updatedAt: item.getUpdatedAt()!, closedAt: item.getClosedAt()!, labels: item.getLabels()!, milestone: item.getMilestone()!, status: item.getStatus()!, url: item.getUrl()! })
+    rawCardArray.push({ title: item.getTitle()!, body: item.getBody()!, author: item.getAuthor()?.login as string, assignees: item.getAssignees()!, state: item.getState()!, archived: item.isArchived()!, id: parseInt(item.getNumber()!), createdAt: item.getCreatedAt()!, updatedAt: item.getUpdatedAt()!, closedAt: item.getClosedAt()!, labels: item.getLabels()!, milestone: item.getMilestone()!, status: item.getStatus()!, url: item.getUrl()! })
   }
   {
-    let dir = "";
-    const data = data2map(standardizedProjectItems);
+    let path = "";
 
     if (await exists(options.path)) {
       const files = await readdir(options.path);
       if (files.length > 0) {
-        dir = resolve(options.path, "./kanban");
-        ensureDir(dir);
+        path = resolve(options.path, "./kanban");
+        ensureDir(path);
       } else {
-        dir = options.path;
+        path = options.path;
       }
     } else {
-      dir = options.path;
-      ensureDir(dir);
+      path = options.path;
+      ensureDir(path);
     }
 
-    map2files(data, dir);
+    internalDataToFiles(getInternalData(rawCardArray), path);
   }
 }
