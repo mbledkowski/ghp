@@ -4,13 +4,18 @@
   "type": "module",
   "devDependencies": {
     "@types/fs-extra": "^11.0.3",
-    "bun-types": "latest"
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "bun-types": "latest",
+    "eslint": "^8.53.0",
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "@apollo/client": "^3.8.5",
+    "@octokit/graphql": "^7.0.2",
     "@types/prompts": "^2.4.6",
     "commander": "^11.1.0",
     "fs-extra": "^11.1.1",
