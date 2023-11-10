@@ -38,7 +38,7 @@ program.parse(process.argv);
 const options = program.opts();
 
 const NAME = options.name || "mbledkowski";
-const ORG = options.org ? true : false;
+const ORG = options.org;
 const TOKEN = process.env.GHTOKEN || "";
 let id = 1;
 if (options.id) {

@@ -25,7 +25,7 @@ async function readMarkdown(mainFileName: string, cardsDirName: string, path: st
             if (inListItem.hasOwnProperty("type") && inListItem.type === "paragraph") {
               for (let i = 0; i < inListItem.children.length; i++) {
                 const paragraphItem = inListItem.children[i];
-                const timestampRegex = /@{[A-Z0-9-:]*}/g;
+                const timestampRegex = /@{[A-Z0-9-:]*}/;
                 if (i === 0 && paragraphItem.type === "text" && (paragraphItem.value === "[ ] " || "[x] ")) {
                   continue;
                 } else if (paragraphItem.type === "strong" && "value" in paragraphItem.children[0] && !timestampRegex.test(paragraphItem.children[0].value)) {
