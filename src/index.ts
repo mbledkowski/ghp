@@ -20,7 +20,7 @@ async function getVersion() {
     })
   })
   return { version, hash };
-};
+}
 
 const { version: VERSION, hash: HASH } = await getVersion();
 

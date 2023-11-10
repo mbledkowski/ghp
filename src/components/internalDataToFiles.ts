@@ -59,7 +59,7 @@ export async function internalDataToFiles(data: InternalData, path: string): Pro
         {
           const editableTableMd = markdownTable(editableTable, { align: ["l", "l"] });
           const staticTableMd = markdownTable(staticTable, { align: ["l", "l"] });
-          let cardPath = resolve(path, `./${data.cardsDirName}/`, `./${path}.md`);
+          const cardPath = resolve(path, `./${data.cardsDirName}/`, `./${path}.md`);
           const cardFile = createWriteStream(cardPath);
           main.write(`- [ ] **${card.title.trim()}** @{${card.createdAt}} ![Card](./${data.cardsDirName}/${path}.md)\n`)
           cardFile.write(`${card.body}\n\n***\n\n${editableTableMd}\n\n***\n\n<!-- Do NOT change values below! -->\n\n${staticTableMd}`)
